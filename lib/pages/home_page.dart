@@ -36,6 +36,18 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void _navigateAndDisplaySelection(BuildContext context, String amount,String intent ) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) =>BkashPayment(amount: amount, intent: intent)));
+
+    // After the Selection Screen returns a result, hide any previous snackbars
+    // and show the new result.
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('$result')));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,8 +110,10 @@ class _HomePageState extends State<HomePage> {
                 // remove focus from TextField to hide keyboard
                 focusNode.unfocus();
                 // Goto BkashPayment page & pass the params
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => BkashPayment(amount: amount, intent: intent)));
+                // Navigator.of(context)
+                //     .push(MaterialPageRoute(builder: (context) => BkashPayment(amount: amount, intent: intent)));
+
+                _navigateAndDisplaySelection(context,amount,intent);
               },
             )
           ],

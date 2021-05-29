@@ -88,6 +88,7 @@ class _BkashPaymentState extends State<BkashPayment> {
                 String status = data[3].replaceAll("status=", "").toString();
                 print('status: '+ status);
                 Fluttertoast.showToast(msg: status);
+                Navigator.pop(context, status);
               }
               setState(() => isLoading = false);
 
