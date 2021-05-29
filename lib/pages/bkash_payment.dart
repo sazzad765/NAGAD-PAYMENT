@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../model/payment_request.dart';
@@ -24,6 +25,7 @@ class _BkashPaymentState extends State<BkashPayment> {
   JavaScriptInterface _javaScriptInterface;
 
   bool isLoading = true;
+  bool isSuccess = false;
   var paymentRequest = "";
 
   @override
@@ -69,8 +71,26 @@ class _BkashPaymentState extends State<BkashPayment> {
             //
             //   setState(() => isLoading = false);
             // },
+
             onPageFinished: (String url) {
               print('urlFlutter'+ url);
+
+              if(url.contains(new RegExp('https://flyingbird-bd.com/public/shop?', caseSensitive: true))) {
+                setState(() {
+                  isSuccess = url.contains(
+                      new RegExp('status=Success', caseSensitive: true));
+                  isSuccess =! url.contains(
+                      new RegExp('status=Aborted', caseSensitive: true));
+                });
+                var data = url.replaceAll("https://flyingbird-bd.com/public/shop?", "").split('&');
+                print('data'+url.replaceAll("https://flyingbird-bd.com/public/shop?", "").split('&').toString());
+
+                String status = data[3].replaceAll("status=", "").toString();
+                print('status: '+ status);
+                Fluttertoast.showToast(msg: status);
+              }
+              setState(() => isLoading = false);
+
                 // _redirectToStripe(widget.sessionId);
             },
             gestureNavigationEnabled: true,
